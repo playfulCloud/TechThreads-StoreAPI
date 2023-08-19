@@ -1,1 +1,1 @@
-# SimpleStore-Spring-boot
+# Store - API
