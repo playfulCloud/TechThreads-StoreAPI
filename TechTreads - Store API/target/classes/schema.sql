@@ -1,0 +1,56 @@
+-- CREATE DATABASE  IF NOT EXISTS `store`;
+-- USE `store`;
+--
+--
+--
+-- CREATE TABLE `basket` (
+--  `id` int NOT NULL AUTO_INCREMENT,
+--  `content` varchar(128) DEFAULT NULL,
+--   charge DOUBLE PRECISION DEFAULT NULL,
+--  PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+--
+--
+--
+-- CREATE TABLE product (
+-- `id` int NOT NULL AUTO_INCREMENT,
+--  title VARCHAR(255) default NULL,
+--  description TEXT,
+--  price DOUBLE NOT NULL,
+--  PRIMARY KEY (`id`)
+-- )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+--
+--CREATE TABLE `review` (
+--    `id` int NOT NULL AUTO_INCREMENT,
+--    `comment` varchar(256) NOT NULL,
+--    author varchar(256) DEFAULT NULL,
+--    `product_id` int DEFAULT NULL,
+--
+--    PRIMARY KEY (`id`),
+--
+--    KEY `FK_COURSE_ID_idx` (`product_id`),
+--
+--    CONSTRAINT `FK_COURSE`
+--    FOREIGN KEY (`product_id`)
+--    REFERENCES `product` (`id`)
+--
+--    ON DELETE NO ACTION ON UPDATE NO ACTION
+--  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+--
+--
+--
+--
+--
+--CREATE TABLE `user` (
+--  `id` INT NOT NULL AUTO_INCREMENT,
+--  `first_name` VARCHAR(45) DEFAULT NULL,
+--  `balance` DOUBLE PRECISION DEFAULT NULL,
+--  `pw` VARCHAR(68) NOT NULL,
+--  `last_name` VARCHAR(45) DEFAULT NULL,
+--  `email` VARCHAR(45) DEFAULT NULL,
+--  `basket_id` INT DEFAULT NULL,
+--  `role` VARCHAR(20), -- Assuming the role names are short strings (adjust the size as needed)
+--  PRIMARY KEY (`id`),
+--  KEY `FK_DETAIL_idx` (`basket_id`),
+--  CONSTRAINT `FK_DETAIL` FOREIGN KEY (`basket_id`) REFERENCES `basket` (`id`)
+--) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
