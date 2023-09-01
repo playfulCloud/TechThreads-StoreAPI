@@ -1,5 +1,6 @@
 package com.playfulCloud.cruddemo.customer.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playfulCloud.cruddemo.basket.entity.Basket;
 import com.playfulCloud.cruddemo.customer.role.Role;
 import jakarta.persistence.*;
@@ -48,6 +49,7 @@ public class Customer implements UserDetails {
     private Role role;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }

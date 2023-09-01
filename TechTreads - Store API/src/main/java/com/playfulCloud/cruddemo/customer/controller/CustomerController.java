@@ -1,7 +1,5 @@
 package com.playfulCloud.cruddemo.customer.controller;
 
-import com.playfulCloud.cruddemo.product.entity.Product;
-import com.playfulCloud.cruddemo.product.service.ProductService;
 import com.playfulCloud.cruddemo.customer.authenticate.AuthenticationRequest;
 import com.playfulCloud.cruddemo.customer.authenticate.AuthenticationResponse;
 import com.playfulCloud.cruddemo.customer.authenticate.AuthenticationService;
@@ -9,7 +7,11 @@ import com.playfulCloud.cruddemo.customer.authenticate.RegisterRequest;
 import com.playfulCloud.cruddemo.customer.entity.Customer;
 import com.playfulCloud.cruddemo.customer.exception.UserNotFoundException;
 import com.playfulCloud.cruddemo.customer.service.CustomerService;
+import com.playfulCloud.cruddemo.product.entity.Product;
+import com.playfulCloud.cruddemo.product.service.ProductService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,28 +22,27 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Data
 public class CustomerController {
-
 
     private final CustomerService customerService;
     private final ProductService productService;
     private final AuthenticationService authenticationService;
 
     @GetMapping("/users")
-    public List<Customer> findAll() {
-        return customerService.findAll();
+    public ResponseEntity<List<Customer>> findAll() {
+        return ResponseEntity.ok(customerService.findAll());
     }
 
     @GetMapping("/users/{id}")
-    public Customer user(@PathVariable int id) {
+    public ResponseEntity<Customer> user(@PathVariable int id) {
         Optional<Customer> user = customerService.findById(id);
-
-        return user.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesnt exists!"));
+        Customer customer = user.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesnt exists!"));
+        return ResponseEntity.ok(customer);
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-
         if (customerService.findByEmail(request.getEmail()).isPresent())
             throw new RuntimeException("User with this email already exists: " + request.getEmail());
         else
@@ -86,7 +87,6 @@ public class CustomerController {
 
     @PutMapping("/users/balance/{id}")
     public ResponseEntity<Customer> updateBalance(@RequestBody double balance, @PathVariable int id) {
-
         Optional<Customer> foundUser = customerService.findById(id);
 
         Customer customer = foundUser.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesnt exists!"));
@@ -100,14 +100,11 @@ public class CustomerController {
 
     @PutMapping("/users/{userId}/basket")
     public ResponseEntity<Customer> addToBasket(@RequestBody int productId, @PathVariable int userId) {
-
         Optional<Customer> foundUser = customerService.findById(userId);
         Customer customer = foundUser.orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " doesnt exists!"));
 
-
         Optional<Product> foundProduct = productService.findById(productId);
         Product product = foundProduct.orElseThrow(() -> new UserNotFoundException("Product with id: " + productId + " doesnt exists!"));
-
 
         List<String> elementsInBasket = new ArrayList<>(List.of(customer.getBasket().getContent().split(",")));
 
@@ -124,7 +121,6 @@ public class CustomerController {
 
     @PutMapping("/users/{userId}/basket-remove")
     public ResponseEntity<Customer> removeFromBasket(@RequestBody int productId, @PathVariable int userId) {
-
         Optional<Customer> foundUser = customerService.findById(userId);
         Customer customer = foundUser.orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " doesnt exists!"));
 
@@ -151,7 +147,6 @@ public class CustomerController {
 
     @DeleteMapping("users/payment/{id}")
     public ResponseEntity<Customer> payForBasketItems(@PathVariable int id) {
-
         Optional<Customer> foundUser = customerService.findById(id);
         Customer customer = foundUser.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesnt exists!"));
 

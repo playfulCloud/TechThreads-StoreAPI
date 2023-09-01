@@ -15,8 +15,8 @@ import java.util.Optional;
 @Data
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
-    private WebClient.Builder webClient;
+    private final ProductRepository productRepository;
+    private final WebClient.Builder webClient;
 
     @Override
     public List<Product> findAll() {
