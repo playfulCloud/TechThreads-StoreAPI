@@ -1,4 +1,4 @@
--- CREATE DATABASE  IF NOT EXISTS `store`;
+-- CREATE DATABASE `store`;
 -- USE `store`;
 --
 --

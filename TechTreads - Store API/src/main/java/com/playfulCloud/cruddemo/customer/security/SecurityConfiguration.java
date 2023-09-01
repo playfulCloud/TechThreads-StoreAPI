@@ -3,6 +3,7 @@ package com.playfulCloud.cruddemo.customer.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,14 +31,16 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/api/register", "/api/login","/api/products", "/api/users")
+                        .requestMatchers("/api/register", "/api/login","/api/products", "/api/users", "/api/users/{id}","/api/users/balance/{id}")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).authenticationProvider(authenticationProvider
-                ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults());
 
         return http.build();
     }

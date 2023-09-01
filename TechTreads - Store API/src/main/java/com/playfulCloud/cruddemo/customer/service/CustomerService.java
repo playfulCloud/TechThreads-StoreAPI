@@ -10,7 +10,7 @@ public interface CustomerService {
     List<Customer> findAll();
     Optional<Customer> findById(int id);
     Customer save(Customer customer);
-    void deleteById(int id);
+    String deleteById(int id);
     Optional<Customer> findByEmail(String email);
 
 }

@@ -39,8 +39,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public void deleteById(int id) {
+    public String deleteById(int id) {
         customerRepository.deleteById(id);
+        return "Success";
     }
 
     @Override
