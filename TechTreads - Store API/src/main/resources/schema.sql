@@ -11,6 +11,19 @@
 -- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 --
 --
+--  CREATE TABLE order_to_do (
+--   `id` int NOT NULL AUTO_INCREMENT,
+--   `content` varchar(128) DEFAULT NULL,
+--    payment DOUBLE PRECISION DEFAULT NULL,
+--    status varchar(20),
+--    city VARCHAR(255) default NULL,
+--    street VARCHAR(255) default NULL,
+--    postal_code VARCHAR(255) default NULL,
+--    date_of_order DATETIME,
+--   PRIMARY KEY (`id`)
+--  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+--
+--
 --
 -- CREATE TABLE product (
 -- `id` int NOT NULL AUTO_INCREMENT,

@@ -1,10 +1,7 @@
 package com.playfulCloud.cruddemo.product.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +11,7 @@ import java.util.List;
 @Table(name = "product")
 @Data
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
 public class Product {
 
 
@@ -46,5 +42,10 @@ public class Product {
         if (reviews == null) reviews = new ArrayList<>();
 
         reviews.add(review);
+    }
+
+    @Override
+    public String toString(){
+        return  "name: " + this.getTitle() + "price: " + this.getPrice();
     }
 }

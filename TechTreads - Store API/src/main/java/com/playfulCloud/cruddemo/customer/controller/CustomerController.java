@@ -7,11 +7,14 @@ import com.playfulCloud.cruddemo.customer.authenticate.RegisterRequest;
 import com.playfulCloud.cruddemo.customer.entity.Customer;
 import com.playfulCloud.cruddemo.customer.exception.UserNotFoundException;
 import com.playfulCloud.cruddemo.customer.service.CustomerService;
+import com.playfulCloud.cruddemo.order.entity.Order;
+import com.playfulCloud.cruddemo.order.orderResponse.OrderRequest;
+import com.playfulCloud.cruddemo.order.orderResponse.OrderResponse;
+import com.playfulCloud.cruddemo.order.service.OrderService;
+import com.playfulCloud.cruddemo.order.service.PlacingOrderService;
 import com.playfulCloud.cruddemo.product.entity.Product;
 import com.playfulCloud.cruddemo.product.service.ProductService;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +24,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 @Data
 public class CustomerController {
 
     private final CustomerService customerService;
     private final ProductService productService;
     private final AuthenticationService authenticationService;
+    private final PlacingOrderService placingOrderService;
+    private final OrderService orderService;
 
     @GetMapping("/users")
     public ResponseEntity<List<Customer>> findAll() {
@@ -43,10 +47,11 @@ public class CustomerController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        if (customerService.findByEmail(request.getEmail()).isPresent())
-            throw new RuntimeException("User with this email already exists: " + request.getEmail());
-        else
+        if (customerService.findByEmail(request.getEmail()).isEmpty())
             return ResponseEntity.ok(authenticationService.register(request));
+        else
+            throw new UserNotFoundException("User with this email already exists: " + request.getEmail());
+
     }
 
     @PostMapping("/login")
@@ -146,13 +151,19 @@ public class CustomerController {
     }
 
     @DeleteMapping("users/payment/{id}")
-    public ResponseEntity<Customer> payForBasketItems(@PathVariable int id) {
+    public ResponseEntity<OrderResponse> payForBasketItems(@PathVariable int id, @RequestBody OrderRequest request) {
         Optional<Customer> foundUser = customerService.findById(id);
         Customer customer = foundUser.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesnt exists!"));
 
         if (customer.getBasket().getContent().equals("")) throw new UserNotFoundException("Basket is empty");
 
         if (customer.getBalance() >= customer.getBasket().getCharge()) {
+
+            request.setToPay(customer.getBasket().getCharge());
+            request.setContent(customer.getBasket().getContent());
+            request.setEmail(customer.getEmail());
+
+            OrderResponse response = placingOrderService.placeOrder(request);
 
             customer.setBalance(customer.getBalance() - customer.getBasket().getCharge());
 
@@ -164,11 +175,18 @@ public class CustomerController {
             customer.getBasket().setCharge(0);
 
             customerService.save(customer);
-
-            return ResponseEntity.ok(customer);
+            return ResponseEntity.ok(response);
         }
 
         throw new UserNotFoundException("Insufficient funds: " + customer.getBalance());
+    }
+
+    @GetMapping("users/{id}/orders")
+    public List<Order> getUsersOrder(@PathVariable int id){
+        Optional<Customer> foundUser = customerService.findById(id);
+        Customer customer = foundUser.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesnt exists!"));
+
+        return orderService.findByEmail(customer.getEmail());
     }
 
 }

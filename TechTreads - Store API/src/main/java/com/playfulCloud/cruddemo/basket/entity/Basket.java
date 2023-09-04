@@ -8,7 +8,6 @@ import lombok.Data;
 @Table(name="basket")
 @Data
 public class Basket {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,5 +23,4 @@ public class Basket {
         this.content = "";
         this.charge = 0.0;
     }
-
 }
