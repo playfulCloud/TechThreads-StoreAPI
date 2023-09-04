@@ -3,7 +3,7 @@ package com.playfulCloud.cruddemo.customer.authenticate;
 import com.playfulCloud.cruddemo.basket.entity.Basket;
 import com.playfulCloud.cruddemo.customer.entity.Customer;
 import com.playfulCloud.cruddemo.customer.exception.UserNotFoundException;
-import com.playfulCloud.cruddemo.customer.mail.MailService;
+import com.playfulCloud.cruddemo.customer.mail.JavaMailServiceImpl;
 import com.playfulCloud.cruddemo.customer.repository.CustomerRepository;
 import com.playfulCloud.cruddemo.customer.role.Role;
 import com.playfulCloud.cruddemo.customer.security.JwtService;
@@ -23,7 +23,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final CustomerRepository customerRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final MailService service;
+    private final JavaMailServiceImpl service;
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {

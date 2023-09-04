@@ -37,6 +37,10 @@ public class ExternalApiDataFetcher {
 
     public void saveFetchedProductsToDataBase(Product[] products) {
         for (Product product : products) {
+            if(product.getDescription().length() >= 255){
+                String[] sentance = product.getDescription().split("\\.");
+                product.setDescription(sentance[0]);
+            }
             service.save(product);
         }
 
